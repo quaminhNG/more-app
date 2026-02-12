@@ -53,6 +53,7 @@ const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
                     : col
             )
         );
+        showToast("Create task successfully", "success");
     }
     const selectStatusAndMoveTask = ({ taskId, newStatus }) => {
         const movedTask = columns
