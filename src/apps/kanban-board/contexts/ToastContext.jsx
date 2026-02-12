@@ -54,7 +54,7 @@ export const ToastProvider = ({ children }) => {
     return (
         <ToastContext.Provider value={{ showToast }}>
             {children}
-            <div className="fixed top-4 right-4 z-[100] flex flex-col gap-2 pointer-events-none">
+            <div className="fixed top-4 left-4 right-4 md:left-auto md:right-4 z-[100] flex flex-col gap-2 pointer-events-none">
                 <AnimatePresence>
                     {toasts.map((toast) => (
                         <motion.div
@@ -63,7 +63,7 @@ export const ToastProvider = ({ children }) => {
                             animate={{ opacity: 1, x: 0, scale: 1 }}
                             exit={{ opacity: 0, x: 20, scale: 0.9 }}
                             layout
-                            className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border min-w-[300px] backdrop-blur-sm ${colors[toast.type]}`}
+                            className={`pointer-events-auto flex items-center gap-3 px-4 py-3 rounded-xl shadow-lg border w-full md:w-auto md:min-w-[300px] backdrop-blur-sm ${colors[toast.type]}`}
                         >
                             <span className="shrink-0">{icons[toast.type]}</span>
                             <p className="text-sm font-medium">{toast.message}</p>
