@@ -1,6 +1,6 @@
 import { Listbox } from "@headlessui/react";
 import { LIST_BOX_COLOR } from "../../constants/task/ListBoxColors"
-const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "up", width = "w-32 sm:w-38" }) => {
+const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "up", width = "w-32 sm:w-38", selectStatusAndMoveTask }) => {
 
     return (
         <Listbox value={selectedPriority} onChange={setSelectedPriority}>
@@ -14,10 +14,14 @@ const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "
                 <Listbox.Options className={`absolute ${direction === "up" ? "bottom-full mb-2" : "top-full mt-2"} z-[100] w-full bg-white rounded-xl shadow-lg p-1 focus:outline-none border-none max-h-60 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']`}>
                     {options.map((item) => (
                         <Listbox.Option
+                            selectStatusAndMoveTask={selectStatusAndMoveTask}
                             key={item}
                             value={item}
                             className={({ active }) =>
-                                `cursor-pointer px-3 py-1.5 rounded-lg text-sm transition-colors mb-1 last:mb-0 ${active ? "bg-gray-100" : ""} ${LIST_BOX_COLOR[item] || "text-gray-700"}`
+                                `cursor-pointer px-3 py-1.5 rounded-lg text-sm transition-colors mb-1 last:mb-0 ${LIST_BOX_COLOR[item]
+                                    ? `${LIST_BOX_COLOR[item]} ${active ? "brightness-95" : ""}`
+                                    : `${active ? "bg-gray-100" : ""} text-gray-700`
+                                }`
                             }
                         >
                             {item}

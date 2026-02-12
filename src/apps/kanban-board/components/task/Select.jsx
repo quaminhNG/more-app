@@ -1,5 +1,5 @@
 import ListBox from "./ListBox";
-const Select = ({ isClick, selectedPriority, setSelectedPriority, options, label }) => {
+const Select = ({ isClick, selectedPriority, setSelectedPriority, options, label, selectStatusAndMoveTask }) => {
     return (
         <div className="flex items-center justify-between text-gray-500 text-sm font-medium z-20">
             <div className="flex flex-row items-center gap-1">
@@ -20,6 +20,7 @@ const Select = ({ isClick, selectedPriority, setSelectedPriority, options, label
             {isClick && (
                 <div onClick={(e) => e.stopPropagation()}>
                     <ListBox
+                        selectStatusAndMoveTask={selectStatusAndMoveTask}
                         selectedPriority={selectedPriority}
                         setSelectedPriority={setSelectedPriority}
                         options={options}

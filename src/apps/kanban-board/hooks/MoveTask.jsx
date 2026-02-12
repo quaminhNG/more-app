@@ -21,7 +21,7 @@ const useMoveTask = (setColumns) => {
 
             const newDestinationColumn = {
                 ...destinationColumn,
-                tasks: [...destinationColumn.tasks, taskToMove],
+                tasks: [...destinationColumn.tasks, { ...taskToMove, status: destinationColumn.title }],
             };
 
             columns[sourceColumnIndex] = newSourceColumn;
