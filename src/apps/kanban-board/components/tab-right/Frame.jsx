@@ -97,8 +97,8 @@ const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
         showToast("Moved task successfully", "success");
     };
     return (
-        <div className="flex-1 h-full bg-white rounded-3xl p-6 relative shadow-sm">
-            <div className="absolute top-6 left-6 z-10 flex flex-row items-center">
+        <div className="flex-1 h-full bg-white rounded-3xl p-3 md:p-6 relative shadow-sm">
+            <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-row items-center">
                 <div className={`transition-all duration-300 ease-in-out flex items-center ${!isOpen ? 'w-10 mr-6 opacity-100 visible' : 'w-0 mr-0 opacity-0 invisible'}`}>
                     <button onClick={handleOpen} className="p-2 cursor-pointer bg-gray-100 rounded-xl shadow-lg hover:bg-gray-50 transition-colors">
                         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
@@ -120,7 +120,7 @@ const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
                             <div
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, item.id)}
-                                key={item.id} className="flex-1 min-w-[300px] h-full bg-gray-50 rounded-2xl p-4 overflow-y-hidden">
+                                key={item.id} className="flex-1 min-w-[280px] md:min-w-[300px] h-full bg-gray-50 rounded-2xl p-4 overflow-y-hidden">
                                 <TitleTask title={item.title} count={item.tasks.length} handleAddTask={handleAddTask} />
                                 {item.tasks.map((task) => (
                                     <Task task={task} fromColumnId={item.id} key={task.id} selectStatusAndMoveTask={selectStatusAndMoveTask} statusOptions={columns.map(c => c.title)} updateTask={updateTask} />
