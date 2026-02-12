@@ -3,8 +3,8 @@ import ProgressBar from "./ProgressBar";
 const HeaderTask = ({ isClick, doneTask, items, progress, title, startDate, endDate }) => {
     return (
         <div className={`flex justify-between mb-3 ${isClick ? 'flex-col gap-3' : 'flex-row'}`}>
-            <div className="flex flex-col items-start gap-2">
-                <span className="text-gray-800 font-semibold text-base leading-tight">
+            <div className={`flex flex-col items-start gap-2 ${!isClick ? 'flex-1 overflow-hidden' : ''}`}>
+                <span className={`text-gray-800 font-semibold text-base leading-tight ${!isClick ? 'truncate block max-w-[150px]' : ''}`} title={title}>
                     {title}
                 </span>
                 <div className="flex items-center gap-1 text-gray-400">
@@ -22,7 +22,9 @@ const HeaderTask = ({ isClick, doneTask, items, progress, title, startDate, endD
                     </svg>
                 </div>
             )}
-            <ProgressBar isClick={isClick} doneTask={doneTask} items={items} progress={progress} />
+            <div>
+                <ProgressBar isClick={isClick} doneTask={doneTask} items={items} progress={progress} />
+            </div>
         </div>
     );
 };

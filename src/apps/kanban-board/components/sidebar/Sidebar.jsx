@@ -4,7 +4,7 @@ import MenuGroup from "./MenuGroup";
 
 const Sidebar = ({ isOpen, handleOpen, activeItem, handleActive, isMobile }) => {
     return (
-        <div className={`transition-all duration-300 ease-in-out ${isOpen ? "w-64" : "w-0 overflow-hidden"} ${isMobile ? "absolute top-0 left-0 h-full z-50 bg-gray-100 shadow-xl rounded-3xl" : "shrink-0"}`}>
+        <div className={`transition-all duration-300 ease-in-out overflow-hidden ${isMobile ? `absolute top-0 left-0 h-full z-50 bg-gray-100 shadow-xl rounded-3xl w-64 ${isOpen ? "translate-x-0" : "-translate-x-full opacity-0"}` : `shrink-0 ${isOpen ? "w-64" : "w-0"}`}`}>
             <div className={`flex flex-col h-full w-64 pr-4 ${isMobile ? "pl-6 py-6" : ""} transition-opacity duration-300 ${isOpen ? "opacity-100" : "opacity-0"}`}>
                 <div className="flex flex-row items-center justify-between pb-4">
                     <div className="flex flex-row gap-2 items-center">

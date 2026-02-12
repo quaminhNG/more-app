@@ -7,7 +7,7 @@ import Assignees from "./Assignees";
 import { AnimatePresence, motion } from "framer-motion";
 import HeaderTask from "./HeaderTask";
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../../constants/task/Options";
-const Task = ({ task, fromColumnId }) => {
+const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, updateTask }) => {
     const handleDragStart = (e) => {
         e.dataTransfer.setData(
             "task",
@@ -25,7 +25,7 @@ const Task = ({ task, fromColumnId }) => {
 
 
     const [selectedPriority, setSelectedPriority] = useState(task.priority || "Normal");
-    const [selectedProgress, setselectedProgress] = useState(task.status || "Todo");
+    const [selectedProgress, setselectedProgress] = useState(task.status || "To Do");
 
     const [items, setItems] = useState(task.items || []);
 
@@ -39,7 +39,18 @@ const Task = ({ task, fromColumnId }) => {
         const newItems = [...items];
         newItems[index].done = !newItems[index].done;
         setItems(newItems);
+        if (updateTask) {
+            updateTask(task.id, { items: newItems });
+        }
     }
+    const handleStatusChange = (newStatus) => {
+        if (selectStatusAndMoveTask) {
+            selectStatusAndMoveTask({ taskId: task.id, newStatus });
+        }
+    }
+    useEffect(() => {
+        setselectedProgress(task.status || "To Do");
+    }, [task.status]);
     return (
         <div className="w-full pb-4" draggable onDragStart={handleDragStart}>
             <motion.div
@@ -68,8 +79,8 @@ const Task = ({ task, fromColumnId }) => {
                 {/* --- FOOTER --- */}
                 <div className={`flex justify-between gap-y-2 ${isClick ? 'flex-col' : 'flex-row flex-wrap items-center'}`}>
                     <div className={`flex ${isClick ? 'flex-col pb-3 gap-1' : 'flex-row flex-wrap items-center gap-2'}`}>
-                        <Select isClick={isClick} selectedPriority={selectedPriority} setSelectedPriority={setSelectedPriority} options={PRIORITY_OPTIONS} label="Priority" />
-                        <Select isClick={isClick} selectedPriority={selectedProgress} setSelectedPriority={setselectedProgress} options={STATUS_OPTIONS} label="In Progress" />
+                        <Select isClick={isClick} selectedPriority={selectedPriority} setSelectedPriority={setSelectedPriority} options={PRIORITY_OPTIONS} label="Priority" selectStatusAndMoveTask={selectStatusAndMoveTask} />
+                        <Select isClick={isClick} selectedPriority={selectedProgress} setSelectedPriority={handleStatusChange} options={statusOptions || STATUS_OPTIONS} label="In Progress" selectStatusAndMoveTask={selectStatusAndMoveTask} />
                     </div>
                     <div className={`flex gap-3 ${isClick ? "flex-col items-start" : "flex-row items-center"}`}>
                         <AnimatePresence mode="popLayout">
