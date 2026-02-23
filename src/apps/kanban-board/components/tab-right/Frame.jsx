@@ -8,8 +8,10 @@ import useMoveTask from "../../hooks/MoveTask";
 import TabActive from "./TabActive";
 import { useToast } from "../../contexts/ToastContext";
 import { DEFAULT_COLUMNS } from "../../constants/tab-right/DefaultColumns";
+import TimelineView from "./TimelineView";
+import TrashView from "./TrashView";
 
-const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
+const Frame = ({ handleOpen, isOpen, activeItem, activeTab, handleActiveTab }) => {
     const { showToast } = useToast();
     const [columns, setColumns] = useState(() => {
         const saved = localStorage.getItem("kanban-columns");
@@ -97,25 +99,16 @@ const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
         });
         showToast("Moved task successfully", "success");
     };
-    return (
-        <div className="flex-1 h-full bg-white rounded-3xl p-3 md:p-6 relative shadow-sm">
-            <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-row items-center">
-                <div className={`transition-all duration-300 ease-in-out flex items-center ${!isOpen ? 'w-10 mr-6 opacity-100 visible' : 'w-0 mr-0 opacity-0 invisible'}`}>
-                    <button onClick={handleOpen} className="p-2 cursor-pointer bg-gray-100 rounded-xl shadow-lg hover:bg-gray-50 transition-colors">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
-                        </svg>
-                    </button>
-                </div>
-                <div>
-                    <TabLink />
-                </div>
-            </div>
-            <div className="flex flex-col h-full gap-6">
-                <div className="h-16 shrink-0 mt-16 flex items-center">
-                    <TabActive handleActive={handleActiveTab} isActive={activeTab} />
-                </div>
-                <div className="frame-layout">
+
+    const renderContent = () => {
+        switch (activeTab) {
+            case "Timeline":
+                return <TimelineView />;
+            case "Trash":
+                return <TrashView />;
+            case "Board":
+            default:
+                return (
                     <div className="flex-1 w-full flex flex-wrap gap-6 overflow-y-auto content-start">
                         {columns.map((item) => (
                             <div
@@ -129,6 +122,30 @@ const Frame = ({ handleOpen, isOpen, activeTab, handleActiveTab }) => {
                             </div>
                         ))}
                     </div>
+                );
+        }
+    };
+
+    return (
+        <div className="flex-1 h-full bg-white rounded-3xl p-3 md:p-6 relative shadow-sm">
+            <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-row items-center">
+                <div className={`transition-all duration-300 ease-in-out flex items-center ${!isOpen ? 'w-10 mr-6 opacity-100 visible' : 'w-0 mr-0 opacity-0 invisible'}`}>
+                    <button onClick={handleOpen} className="p-2 cursor-pointer bg-gray-100 rounded-xl shadow-lg hover:bg-gray-50 transition-colors">
+                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth="1.5" stroke="currentColor" className="size-6">
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25H12" />
+                        </svg>
+                    </button>
+                </div>
+                <div>
+                    <TabLink activeItem={activeItem} activeTab={activeTab} />
+                </div>
+            </div>
+            <div className="flex flex-col h-full gap-6">
+                <div className="h-16 shrink-0 mt-16 flex items-center">
+                    <TabActive handleActive={handleActiveTab} isActive={activeTab} />
+                </div>
+                <div className="frame-layout">
+                    {renderContent()}
                 </div>
             </div>
         </div>
