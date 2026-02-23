@@ -22,14 +22,9 @@ const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, upda
     const handleClick = () => {
         setIsClick(!isClick);
     }
-
-
     const [selectedPriority, setSelectedPriority] = useState(task.priority || "Normal");
     const [selectedProgress, setselectedProgress] = useState(task.status || "To Do");
-
     const [items, setItems] = useState(task.items || []);
-
-    // Calculate progress from local state 'items'
     const totalItems = items.length;
     const doneTask = items.filter(item => item.done).length;
     const progress = totalItems === 0 ? 0 : Math.round((doneTask / totalItems) * 100);
@@ -57,7 +52,6 @@ const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, upda
                 onClick={handleClick}
                 className={`bg-white rounded-2xl px-4 py-2 shadow-sm border border-gray-100 cursor-pointer group relative ${isClick ? 'z-10' : ''}`}
             >
-                {/* --- HEADER & PROGRESS --- */}
                 <HeaderTask isClick={isClick} doneTask={doneTask} items={items} progress={progress} title={task.title} startDate={task.startDate} endDate={task.endDate} />
                 <AnimatePresence>
                     {isClick && (
@@ -99,7 +93,6 @@ const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, upda
                                 </motion.div>
                             )}
                         </AnimatePresence>
-
                         <div className="flex items-center -space-x-2">
                             <Assignees isClick={isClick} assignees={task.assignees || []} />
                         </div>

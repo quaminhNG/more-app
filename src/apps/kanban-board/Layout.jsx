@@ -32,7 +32,7 @@ const Layout = () => {
             <div className="min-h-screen w-full bg-gray-200 p-2 md:p-4">
                 <div className={`relative min-h-screen w-full bg-gray-100 rounded-3xl p-3 md:p-6 shadow-lg flex flex-row ${isOpen ? "gap-6" : ""}`}>
                     <Sidebar isOpen={isOpen} handleOpen={handleOpen} activeItem={activeItem} handleActive={handleActive} isMobile={isSmallMobile} />
-                    <Frame handleOpen={handleOpen} isOpen={isOpen} activeTab={activeTab} handleActiveTab={handleActiveTab} />
+                    <Frame handleOpen={handleOpen} isOpen={isOpen} activeItem={activeItem} activeTab={activeTab} handleActiveTab={handleActiveTab} />
                 </div>
             </div>
         </ToastProvider>

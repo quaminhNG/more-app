@@ -1,4 +1,4 @@
-const TabLink = () => {
+const TabLink = ({ activeItem, activeTab }) => {
     return (
         <div className="flex flex-row gap-2">
             <button className="cursor-pointer">
@@ -13,7 +13,7 @@ const TabLink = () => {
             </button>
             <button className="cursor-pointer">
                 <span className="text-gray-400 text-sm hover:text-gray-600">
-                    Board
+                    {activeItem}
                 </span>
             </button>
             <button className="cursor-pointer">
@@ -22,8 +22,8 @@ const TabLink = () => {
                 </svg>
             </button>
             <button className="cursor-pointer">
-                <span className="text-gray-400 text-sm hover:text-gray-600">
-                    Overview
+                <span className="text-gray-400 text-sm font-semibold hover:text-gray-800">
+                    {activeTab}
                 </span>
             </button>
 
