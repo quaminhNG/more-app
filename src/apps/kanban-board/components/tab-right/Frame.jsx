@@ -105,7 +105,7 @@ const Frame = ({ handleOpen, isOpen, activeItem, activeTab, handleActiveTab }) =
             case "Timeline":
                 return <TimelineView />;
             case "Trash":
-                return <TrashView />;
+                return <TrashView columns={columns} setColumns={setColumns} showToast={showToast} />;
             case "Board":
             default:
                 return (
@@ -115,9 +115,9 @@ const Frame = ({ handleOpen, isOpen, activeItem, activeTab, handleActiveTab }) =
                                 onDragOver={(e) => e.preventDefault()}
                                 onDrop={(e) => handleDrop(e, item.id)}
                                 key={item.id} className="flex-1 min-w-[280px] md:min-w-[300px] h-full bg-gray-50 rounded-2xl p-4 overflow-y-hidden">
-                                <TitleTask title={item.title} count={item.tasks.length} handleAddTask={handleAddTask} />
-                                {item.tasks.map((task) => (
-                                    <Task task={task} fromColumnId={item.id} key={task.id} selectStatusAndMoveTask={selectStatusAndMoveTask} statusOptions={columns.map(c => c.title)} updateTask={updateTask} />
+                                <TitleTask title={item.title} count={item.tasks.filter(t => !t.isDeleted).length} handleAddTask={handleAddTask} />
+                                {item.tasks.filter(t => !t.isDeleted).map((task) => (
+                                    <Task task={task} fromColumnId={item.id} key={task.id} selectStatusAndMoveTask={selectStatusAndMoveTask} statusOptions={columns.map(c => c.title)} updateTask={updateTask} setColumns={setColumns} />
                                 ))}
                             </div>
                         ))}
