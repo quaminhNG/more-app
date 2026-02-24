@@ -7,7 +7,7 @@ import Assignees from "./Assignees";
 import { AnimatePresence, motion } from "framer-motion";
 import HeaderTask from "./HeaderTask";
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../../constants/task/Options";
-const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, updateTask }) => {
+const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, updateTask, setColumns }) => {
     const handleDragStart = (e) => {
         e.dataTransfer.setData(
             "task",
@@ -43,6 +43,23 @@ const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, upda
             selectStatusAndMoveTask({ taskId: task.id, newStatus });
         }
     }
+    const deleteTask = (taskId) => {
+        setColumns(prev =>
+            prev.map(col => ({
+                ...col,
+                tasks: col.tasks.map(task =>
+                    task.id === taskId
+                        ? {
+                            ...task,
+                            isDeleted: true,
+                            deletedBy: "User",
+                            deletedAt: new Date().toLocaleDateString('en-US', { day: 'numeric', month: 'short', year: 'numeric' })
+                        }
+                        : task
+                )
+            }))
+        );
+    };
     useEffect(() => {
         setselectedProgress(task.status || "To Do");
     }, [task.status]);
@@ -52,7 +69,7 @@ const Task = ({ task, fromColumnId, selectStatusAndMoveTask, statusOptions, upda
                 onClick={handleClick}
                 className={`bg-white rounded-2xl px-4 py-2 shadow-sm border border-gray-100 cursor-pointer group relative ${isClick ? 'z-10' : ''}`}
             >
-                <HeaderTask isClick={isClick} doneTask={doneTask} items={items} progress={progress} title={task.title} startDate={task.startDate} endDate={task.endDate} />
+                <HeaderTask isClick={isClick} doneTask={doneTask} items={items} progress={progress} title={task.title} startDate={task.startDate} endDate={task.endDate} deleteTask={deleteTask} task={task} />
                 <AnimatePresence>
                     {isClick && (
                         <motion.div
