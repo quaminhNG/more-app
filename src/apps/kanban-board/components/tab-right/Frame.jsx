@@ -8,7 +8,6 @@ import useMoveTask from "../../hooks/MoveTask";
 import TabActive from "./TabActive";
 import { useToast } from "../../contexts/ToastContext";
 import { DEFAULT_COLUMNS } from "../../constants/tab-right/DefaultColumns";
-import TimelineView from "./TimelineView";
 import TrashView from "./TrashView";
 
 const Frame = ({ handleOpen, isOpen, activeItem, activeTab, handleActiveTab }) => {

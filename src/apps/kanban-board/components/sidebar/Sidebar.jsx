@@ -21,7 +21,7 @@ const Sidebar = ({ isOpen, handleOpen, activeItem, handleActive, isMobile }) => 
                 </div>
                 <Search />
                 <Menu handleActive={handleActive} isActive={activeItem} />
-                <MenuGroup handleActive={handleActive} isActive={activeItem} />
+                {/* <MenuGroup handleActive={handleActive} isActive={activeItem} /> */}
             </div>
         </div>
     );
