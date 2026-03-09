@@ -1,6 +1,6 @@
 import { COLOR_BG, COLOR_SPAN } from "../../constants/tab-right/ColorTittleTasks";
 import AddTask from "./AddTask";
-const TitleTask = ({ title, count, handleAddTask }) => {
+const TitleTask = ({ title, count, handleAddTask, availableUsers }) => {
     return (
         <div className="flex justify-between items-center mb-4 px-2">
             <div className="flex items-center gap-2">
@@ -13,7 +13,7 @@ const TitleTask = ({ title, count, handleAddTask }) => {
                 </span>
             </div>
             {title === "To Do" && (
-                <AddTask handleAddTask={handleAddTask} />
+                <AddTask handleAddTask={handleAddTask} availableUsers={availableUsers} />
             )}
         </div>
     );

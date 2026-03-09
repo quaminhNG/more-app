@@ -126,7 +126,7 @@ const Frame = ({ handleOpen, isOpen, activeItem, activeTab, handleActiveTab }) =
     };
 
     return (
-        <div className="flex-1 h-full bg-white rounded-3xl p-3 md:p-6 relative shadow-sm">
+        <div className="flex-1 min-w-0 h-full bg-white rounded-3xl p-3 md:p-6 relative shadow-sm">
             <div className="absolute top-3 left-3 md:top-6 md:left-6 z-10 flex flex-row items-center">
                 <div className={`transition-all duration-300 ease-in-out flex items-center ${!isOpen ? 'w-10 mr-6 opacity-100 visible' : 'w-0 mr-0 opacity-0 invisible'}`}>
                     <button onClick={handleOpen} className="p-2 cursor-pointer bg-gray-100 rounded-xl shadow-lg hover:bg-gray-50 transition-colors">

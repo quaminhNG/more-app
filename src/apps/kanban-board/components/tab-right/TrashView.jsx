@@ -36,6 +36,8 @@ const TrashView = ({ columns, setColumns, showToast }) => {
             handleDeleteForever(confirmData.taskId);
         } else if (confirmData.type === 'empty') {
             handleEmptyTrash();
+        } else if (confirmData.type === 'restore') {
+            handleRestore(confirmData.taskId);
         }
     };
 
@@ -107,7 +109,7 @@ const TrashView = ({ columns, setColumns, showToast }) => {
 
                                     <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
                                         <button
-                                            onClick={() => handleRestore(item.id)}
+                                            onClick={() => { setConfirmData({ type: 'restore', taskId: item.id }); setIsConfirmOpen(true); }}
                                             className="p-1.5 flex items-center justify-center text-gray-400 hover:text-emerald-500 hover:bg-emerald-50 rounded-lg transition-colors cursor-pointer"
                                             title="Restore Task"
                                         >
@@ -136,10 +138,10 @@ const TrashView = ({ columns, setColumns, showToast }) => {
                 isOpen={isConfirmOpen}
                 onClose={() => setIsConfirmOpen(false)}
                 onConfirm={onConfirmExecute}
-                title={confirmData.type === 'empty' ? "Empty Trash" : "Delete Permanently"}
-                message={confirmData.type === 'empty' ? "Are you sure you want to permanently delete all tasks in the trash? This action cannot be undone." : "Are you sure you want to permanently delete this task? This action cannot be undone."}
-                confirmText={confirmData.type === 'empty' ? "Empty Trash" : "Delete"}
-                confirmType="danger"
+                title={confirmData.type === 'empty' ? "Empty Trash" : confirmData.type === 'restore' ? "Restore Task" : "Delete Permanently"}
+                message={confirmData.type === 'empty' ? "Are you sure you want to permanently delete all tasks in the trash? This action cannot be undone." : confirmData.type === 'restore' ? "Are you sure you want to restore this task back to the board?" : "Are you sure you want to permanently delete this task? This action cannot be undone."}
+                confirmText={confirmData.type === 'empty' ? "Empty Trash" : confirmData.type === 'restore' ? "Restore" : "Delete"}
+                confirmType={confirmData.type === 'restore' ? "primary" : "danger"}
             />
         </div>
     );

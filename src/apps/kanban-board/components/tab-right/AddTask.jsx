@@ -1,7 +1,7 @@
 import { useState } from "react";
 import AddTaskModal from "../task/AddTaskModal";
 
-const AddTask = ({ handleAddTask }) => {
+const AddTask = ({ handleAddTask, availableUsers }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     return (
@@ -33,7 +33,7 @@ const AddTask = ({ handleAddTask }) => {
                 </span>
             </button>
 
-            <AddTaskModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} handleAddTask={handleAddTask} />
+            <AddTaskModal isOpen={isModalOpen} onClose={() => setIsModalOpen(false)} handleAddTask={handleAddTask} availableUsers={availableUsers} />
         </div>
     );
 };

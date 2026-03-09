@@ -1,4 +1,5 @@
 import { AnimatePresence, motion } from "framer-motion";
+import { createPortal } from "react-dom";
 
 const ConfirmModal = ({
     isOpen,
@@ -10,7 +11,8 @@ const ConfirmModal = ({
     cancelText = "Cancel",
     confirmType = "danger"
 }) => {
-    return (
+    if (typeof document === "undefined") return null;
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <>
@@ -22,7 +24,6 @@ const ConfirmModal = ({
                         className="fixed inset-0 bg-black/40 backdrop-blur-sm z-[200]"
                         onClick={onClose}
                     />
-
                     <motion.div
                         initial={{ opacity: 0, scale: 0.95, y: 10 }}
                         animate={{ opacity: 1, scale: 1, y: 0 }}
@@ -70,7 +71,8 @@ const ConfirmModal = ({
                     </motion.div>
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 };
 

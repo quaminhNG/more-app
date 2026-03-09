@@ -1,13 +1,16 @@
 import { useEffect, useState, useRef } from "react";
+import { createPortal } from "react-dom";
 import { AnimatePresence, motion } from "framer-motion";
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../../constants/task/Options";
 import { LIST_BOX_COLOR } from "../../constants/task/ListBoxColors";
 import ListBox from "./ListBox";
 import { AVAILABLE_USERS } from "../../constants/task/Users";
+import { AVAILABLE_TAGS } from "../../constants/task/Tags";
 import validateForm from "../../hooks/ValidateFormTask";
-const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
+const AddTaskModal = ({ isOpen, onClose, handleAddTask, handleUpdateTask, initialTask = null, availableUsers = null }) => {
     const [isAssigneeDropdownOpen, setIsAssigneeDropdownOpen] = useState(false);
     const assigneeRef = useRef(null);
+    const usersList = availableUsers || AVAILABLE_USERS;
     const [taskData, setTaskData] = useState({
         title: "",
         description: "",
@@ -15,9 +18,11 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
         status: "To Do",
         startDate: "",
         endDate: "",
-        checklistItems: [{ id: crypto.randomUUID(), text: "" }],
-        assignees: []
+        checklistItems: [{ id: crypto.randomUUID(), text: "", done: false }],
+        assignees: [],
+        tags: []
     });
+
     const [formError, setFormError] = useState({
         title: "",
         description: "",
@@ -28,6 +33,22 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
         checklistItems: "",
         assignees: ""
     });
+
+    useEffect(() => {
+        if (isOpen && initialTask) {
+            setTaskData({
+                title: initialTask.title || "",
+                description: initialTask.description || "",
+                priority: initialTask.priority || "Normal",
+                status: initialTask.status || "To Do",
+                startDate: initialTask.startDate || "",
+                endDate: initialTask.endDate || "",
+                checklistItems: initialTask.items?.length > 0 ? initialTask.items.map(i => ({ id: crypto.randomUUID(), text: i.label, done: i.done })) : [{ id: crypto.randomUUID(), text: "", done: false }],
+                assignees: initialTask.assignees?.map(a => typeof a === 'object' ? a.id : a) || [],
+                tags: initialTask.tags || []
+            });
+        }
+    }, [isOpen, initialTask]);
 
 
     const handleAddChecklistItem = () => {
@@ -60,6 +81,17 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                 return { ...prev, assignees: currentAssignees.filter(id => id !== userId) };
             } else {
                 return { ...prev, assignees: [...currentAssignees, userId] };
+            }
+        });
+    };
+
+    const toggleTag = (tag) => {
+        setTaskData(prev => {
+            const currentTagIds = prev.tags.map(t => t.id);
+            if (currentTagIds.includes(tag.id)) {
+                return { ...prev, tags: prev.tags.filter(t => t.id !== tag.id) };
+            } else {
+                return { ...prev, tags: [...prev.tags, tag] };
             }
         });
     };
@@ -107,25 +139,34 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
             startDate: "",
             endDate: "",
             checklistItems: [{ id: crypto.randomUUID(), text: "" }],
-            assignees: []
+            assignees: [],
+            tags: []
         });
     };
-    const handleCreateTask = () => {
+    const handleCreateOrUpdateTask = () => {
         if (!validateForm({ taskData, setFormError })) return;
         const newTask = {
             ...taskData,
-            id: crypto.randomUUID(),
+            id: initialTask ? initialTask.id : crypto.randomUUID(),
             items: taskData.checklistItems.filter(item => item.text.trim() !== "").map(item => ({
                 label: item.text,
-                done: false
+                done: item.done || false
             })),
-            assignees: AVAILABLE_USERS.filter(u => taskData.assignees.includes(u.id))
+            assignees: taskData.assignees.map(id => usersList.find(u => u.id === id)).filter(Boolean)
         };
-        handleAddTask(newTask);
+
+        if (initialTask && handleUpdateTask) {
+            handleUpdateTask(newTask);
+        } else {
+            handleAddTask(newTask);
+        }
+
         resetForm();
         onClose();
     };
-    return (
+    if (typeof document === "undefined") return null;
+
+    return createPortal(
         <AnimatePresence>
             {isOpen && (
                 <>
@@ -147,7 +188,10 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                     >
                         <div className="bg-white rounded-3xl shadow-2xl w-full max-w-lg max-h-[90vh] flex flex-col pointer-events-auto will-change-transform">
                             <div className="flex items-center justify-between px-6 py-5 border-b border-gray-100 shrink-0">
-                                <h2 className="text-lg font-bold text-gray-800">Create New Task</h2>
+                                <div className="flex flex-col">
+                                    <h2 className="text-xl font-bold text-gray-800">{initialTask ? "Edit Task" : "Create New Task"}</h2>
+                                    <p className="text-sm text-gray-500 mt-1">{initialTask ? "Update the details of your task." : "Fill in the details below to add a new task."}</p>
+                                </div>
                                 <button
                                     onClick={onClose}
                                     className="p-1.5 rounded-xl hover:bg-gray-100 transition-colors cursor-pointer"
@@ -183,6 +227,28 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                                         className="w-full px-4 py-2.5 rounded-xl border border-gray-200 text-sm text-gray-700 placeholder:text-gray-300 focus:outline-none focus:ring-2 focus:ring-indigo-100 focus:border-indigo-300 transition-all resize-none"
                                     />
                                     {formError.description && <p className="text-red-500 text-sm">{formError.description}</p>}
+                                </div>
+
+                                <div className="space-y-2">
+                                    <label className="text-sm font-semibold text-gray-600">Tags / Labels</label>
+                                    <div className="flex flex-wrap gap-2">
+                                        {AVAILABLE_TAGS.map(tag => {
+                                            const isSelected = taskData.tags.some(t => t.id === tag.id);
+                                            return (
+                                                <button
+                                                    key={tag.id}
+                                                    type="button"
+                                                    onClick={() => toggleTag(tag)}
+                                                    className={`text-xs font-medium px-3 py-1.5 rounded-lg transition-all duration-200 ${isSelected
+                                                        ? tag.color + ' shadow-sm'
+                                                        : 'bg-white text-gray-500 border border-gray-200 hover:bg-gray-50 hover:border-gray-300'
+                                                        }`}
+                                                >
+                                                    {tag.name}
+                                                </button>
+                                            );
+                                        })}
+                                    </div>
                                 </div>
 
                                 <div className="grid grid-cols-2 gap-4">
@@ -281,14 +347,20 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                                     <label className="text-sm font-semibold text-gray-600">Assignees</label>
                                     <div className="flex items-center gap-2">
                                         <div className="flex -space-x-2">
-                                            {AVAILABLE_USERS.filter(user => taskData.assignees.includes(user.id)).map((user) => (
-                                                <img
-                                                    key={user.id}
-                                                    className="w-8 h-8 rounded-full border-2 border-white object-cover"
-                                                    src={user.avatar}
-                                                    alt={user.name}
-                                                    title={user.name}
-                                                />
+                                            {usersList.filter(user => taskData.assignees.includes(user.id)).map((user) => (
+                                                user.avatar ? (
+                                                    <img
+                                                        key={user.id}
+                                                        className="w-8 h-8 rounded-full border-2 border-white object-cover"
+                                                        src={user.avatar}
+                                                        alt={user.name}
+                                                        title={user.name}
+                                                    />
+                                                ) : (
+                                                    <div key={user.id} title={user.name} className={`w-8 h-8 rounded-full border-2 border-white flex items-center justify-center text-white bg-gradient-to-tr ${user.color || 'from-gray-400 to-gray-600'} text-[10px] font-bold shrink-0`}>
+                                                        {user.initials || user.name.charAt(0)}
+                                                    </div>
+                                                )
                                             ))}
                                         </div>
                                         <button
@@ -308,28 +380,41 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                                                     exit={{ opacity: 0, y: 10, scale: 0.95 }}
                                                     className="absolute bottom-full left-0 mb-2 w-64 bg-white rounded-xl shadow-xl border border-gray-100 p-2 z-10"
                                                 >
-                                                    <div className="flex flex-col gap-1 max-h-60 overflow-y-auto">
-                                                        {AVAILABLE_USERS.map((user) => (
-                                                            <div
-                                                                key={user.id}
-                                                                onClick={() => toggleAssignee(user.id)}
-                                                                className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${taskData.assignees.includes(user.id) ? 'bg-indigo-50' : 'hover:bg-gray-50'}`}
-                                                            >
-                                                                <img
-                                                                    src={user.avatar}
-                                                                    alt={user.name}
-                                                                    className="w-8 h-8 rounded-full object-cover"
-                                                                />
-                                                                <span className={`text-sm flex-1 ${taskData.assignees.includes(user.id) ? 'font-medium text-indigo-700' : 'text-gray-700'}`}>
-                                                                    {user.name}
-                                                                </span>
-                                                                {taskData.assignees.includes(user.id) && (
-                                                                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5 text-indigo-500">
-                                                                        <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
-                                                                    </svg>
-                                                                )}
+                                                    <div className="flex flex-col gap-1 max-h-60 overflow-y-auto w-full max-w-[240px]">
+                                                        {usersList.length === 0 ? (
+                                                            <div className="py-3 px-2 text-center">
+                                                                <p className="text-sm text-gray-500 font-medium">No members found</p>
+                                                                <p className="text-xs text-gray-400 mt-1">Add members to this project first.</p>
                                                             </div>
-                                                        ))}
+                                                        ) : (
+                                                            usersList.map((user) => (
+                                                                <div
+                                                                    key={user.id}
+                                                                    onClick={() => toggleAssignee(user.id)}
+                                                                    className={`flex items-center gap-3 p-2 rounded-lg cursor-pointer transition-colors ${taskData.assignees.includes(user.id) ? 'bg-indigo-50' : 'hover:bg-gray-50'}`}
+                                                                >
+                                                                    {user.avatar ? (
+                                                                        <img
+                                                                            src={user.avatar}
+                                                                            alt={user.name}
+                                                                            className="w-8 h-8 rounded-full object-cover shrink-0"
+                                                                        />
+                                                                    ) : (
+                                                                        <div className={`w-8 h-8 rounded-full border flex items-center justify-center text-white bg-gradient-to-tr ${user.color || 'from-gray-400 to-gray-600'} text-xs font-bold shrink-0`}>
+                                                                            {user.initials || user.name.charAt(0)}
+                                                                        </div>
+                                                                    )}
+                                                                    <span className={`text-sm flex-1 ${taskData.assignees.includes(user.id) ? 'font-medium text-indigo-700' : 'text-gray-700'}`}>
+                                                                        {user.name}
+                                                                    </span>
+                                                                    {taskData.assignees.includes(user.id) && (
+                                                                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="size-5 text-indigo-500">
+                                                                            <path fillRule="evenodd" d="M2.25 12c0-5.385 4.365-9.75 9.75-9.75s9.75 4.365 9.75 9.75-4.365 9.75-9.75 9.75S2.25 17.385 2.25 12Zm13.36-1.814a.75.75 0 1 0-1.22-.872l-3.236 4.53L9.53 12.22a.75.75 0 0 0-1.06 1.06l2.25 2.25a.75.75 0 0 0 1.14-.094l3.75-5.25Z" clipRule="evenodd" />
+                                                                        </svg>
+                                                                    )}
+                                                                </div>
+                                                            ))
+                                                        )}
                                                     </div>
                                                 </motion.div>
                                             )}
@@ -346,17 +431,18 @@ const AddTaskModal = ({ isOpen, onClose, handleAddTask }) => {
                                     Cancel
                                 </button>
                                 <button
-                                    onClick={handleCreateTask}
+                                    onClick={handleCreateOrUpdateTask}
                                     className="px-5 py-2.5 rounded-xl text-sm font-medium text-white bg-indigo-500 hover:bg-indigo-600 shadow-lg shadow-indigo-500/25 transition-all cursor-pointer"
                                 >
-                                    Create Task
+                                    {initialTask ? "Save Changes" : "Create Task"}
                                 </button>
                             </div>
                         </div>
                     </motion.div>
                 </>
             )}
-        </AnimatePresence>
+        </AnimatePresence>,
+        document.body
     );
 };
 
