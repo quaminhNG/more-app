@@ -149,15 +149,15 @@ const DepartmentsView = ({ handleOpen, isOpen }) => {
     const { showToast } = useToast();
 
     useEffect(() => {
-        const storedDepts = localStorage.getItem("more_app_departments_v3");
+        const storedDepts = localStorage.getItem("more_app_departments");
         if (storedDepts) {
             setDepartments(JSON.parse(storedDepts));
         } else {
             setDepartments(defaultDepartments);
-            localStorage.setItem("more_app_departments_v3", JSON.stringify(defaultDepartments));
+            localStorage.setItem("more_app_departments", JSON.stringify(defaultDepartments));
         }
 
-        const storedEmps = localStorage.getItem("more_app_employees_v3");
+        const storedEmps = localStorage.getItem("more_app_employees");
         if (storedEmps) {
             setEmployees(JSON.parse(storedEmps));
         }
@@ -166,14 +166,14 @@ const DepartmentsView = ({ handleOpen, isOpen }) => {
     const handleAddDepartment = (newDept) => {
         const updated = [newDept, ...departments];
         setDepartments(updated);
-        localStorage.setItem("more_app_departments_v3", JSON.stringify(updated));
+        localStorage.setItem("more_app_departments", JSON.stringify(updated));
         showToast("Thêm phòng ban thành công!", "success");
     };
 
     const handleUpdateDepartment = (updatedDept) => {
         const updated = departments.map(d => d.id === updatedDept.id ? updatedDept : d);
         setDepartments(updated);
-        localStorage.setItem("more_app_departments_v3", JSON.stringify(updated));
+        localStorage.setItem("more_app_departments", JSON.stringify(updated));
         setSelectedDepartment(updatedDept);
     };
 

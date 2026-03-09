@@ -8,7 +8,7 @@ const validateForm = ({ taskData, setFormError }) => {
         newErrors.description = "Description is required";
     }
     if (!taskData.startDate) {
-        newErrors.startDate = "Start date is required";
+        newErrors.startDate = "Start date is required"; 1
     }
     if (!taskData.endDate) {
         newErrors.endDate = "End date is required";

@@ -73,25 +73,29 @@ const AddEmployeeModal = ({ isOpen, onClose, onAddEmployee, departmentsList }) =
 
     const deptOptions = departmentsList && departmentsList.length > 0
         ? ["None", ...departmentsList.map(d => d.name)]
-        : ["None", "Engineering / Tech", "Design", "Product Management", "Sales & Marketing"];
+        : ["None", "Engineering / Tech", "Design", "Product Management", "Quality Assurance", "Sales & Marketing", "Human Resources"];
 
     useEffect(() => {
         if (isOpen) {
+            document.body.style.overflow = "hidden";
             if (!department || !deptOptions.includes(department)) {
                 setDepartment("None");
             }
+        } else {
+            document.body.style.overflow = "";
         }
+        return () => { document.body.style.overflow = ""; };
     }, [isOpen, departmentsList]);
 
     const handleSubmit = () => {
         if (!name.trim()) {
-            showToast("Vui lòng nhập họ tên", "warning"); return;
+            showToast("Please enter your full name", "warning"); return;
         }
         if (!email.trim() || !email.includes('@')) {
-            showToast("Vui lòng nhập đúng email", "warning"); return;
+            showToast("Please enter a valid email", "warning"); return;
         }
         if (!role.trim()) {
-            showToast("Vui lòng nhập chức vụ", "warning"); return;
+            showToast("Please enter your position", "warning"); return;
         }
 
         const nameParts = name.trim().split(" ");
@@ -274,25 +278,25 @@ const EmployeesView = ({ handleOpen, isOpen }) => {
             emp.id === id ? { ...emp, status: newStatus } : emp
         );
         setEmployees(updatedEmployees);
-        localStorage.setItem("more_app_employees_v3", JSON.stringify(updatedEmployees));
+        localStorage.setItem("more_app_employees", JSON.stringify(updatedEmployees));
         showToast("Status updated successfully", "success");
     };
 
     const updateDepartmentsFromStorage = () => {
-        const storedDepts = localStorage.getItem("more_app_departments_v3");
+        const storedDepts = localStorage.getItem("more_app_departments");
         if (storedDepts) {
             setDepartmentsList(JSON.parse(storedDepts));
         }
     };
 
     useEffect(() => {
-        const stored = localStorage.getItem("more_app_employees_v3");
+        const stored = localStorage.getItem("more_app_employees");
         if (stored) {
             setEmployees(JSON.parse(stored));
         } else {
             const initial = generateInitialEmployees();
             setEmployees(initial);
-            localStorage.setItem("more_app_employees_v3", JSON.stringify(initial));
+            localStorage.setItem("more_app_employees", JSON.stringify(initial));
         }
         updateDepartmentsFromStorage();
     }, []);
@@ -303,10 +307,16 @@ const EmployeesView = ({ handleOpen, isOpen }) => {
         }
     }, [isOpen]);
 
+    useEffect(() => {
+        if (isAddModalOpen) {
+            updateDepartmentsFromStorage();
+        }
+    }, [isAddModalOpen]);
+
     const handleAddEmployee = (newEmp) => {
         const updated = [newEmp, ...employees];
         setEmployees(updated);
-        localStorage.setItem("more_app_employees_v3", JSON.stringify(updated));
+        localStorage.setItem("more_app_employees", JSON.stringify(updated));
         showToast("Thêm nhân sự thành công!", "success");
     };
 
@@ -353,7 +363,7 @@ const EmployeesView = ({ handleOpen, isOpen }) => {
                 <TabActive tabs={[{ name: 'All Staff' }, { name: 'Leaders' }]} isActive={activeTab} handleActive={setActiveTab} />
             </div>
 
-            <div className="flex-1 overflow-y-auto w-full pb-4">
+            <div className={`flex-1 w-full pb-4 ${isAddModalOpen ? 'overflow-hidden' : 'overflow-y-auto'}`}>
                 <div className="flex flex-col gap-2 bg-white p-2 rounded-2xl border border-gray-100 shadow-sm">
                     <div className="hidden md:grid grid-cols-12 gap-4 px-6 py-3 text-xs font-bold text-gray-400 uppercase tracking-wider border-b border-gray-50">
                         <div className="col-span-4">Employee</div>
@@ -402,8 +412,6 @@ const EmployeesView = ({ handleOpen, isOpen }) => {
                                 </svg>
                                 <span className="truncate">{employee.email}</span>
                             </div>
-
-                            {/* Status */}
                             <div className="hidden md:flex col-span-2 text-right items-center justify-end gap-4 min-w-0">
                                 <StatusDropdown status={employee.status} id={employee.id} handleChangeStatus={handleChangeStatus} />
                             </div>

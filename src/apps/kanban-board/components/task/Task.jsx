@@ -5,7 +5,7 @@ import Assignees from "./Assignees";
 import { AnimatePresence, motion } from "framer-motion";
 import { PRIORITY_OPTIONS, STATUS_OPTIONS } from "../../constants/task/Options";
 import { useToast } from "../../contexts/ToastContext";
-import colorProgress from "../../hooks/ColorProgress";
+import colorProgress from "../../utils/ColorProgress";
 import ConfirmModal from "../common/ConfirmModal";
 import AddTaskModal from "./AddTaskModal";
 

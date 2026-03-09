@@ -11,7 +11,7 @@ const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
                     </svg>
                 </Listbox.Button>
-                <Listbox.Options className={`absolute ${direction === "up" ? "bottom-full mb-2" : "top-full mt-2"} z-[100] w-full bg-white rounded-xl shadow-lg p-1 focus:outline-none border-none max-h-60 overflow-y-auto [&::-webkit-scrollbar]:hidden [-ms-overflow-style:'none'] [scrollbar-width:'none']`}>
+                <Listbox.Options className={`absolute ${direction === "up" ? "bottom-full mb-2" : "top-full mt-2"} z-[100] w-full bg-white rounded-xl shadow-lg p-1 focus:outline-none border-none max-h-56 overflow-y-auto`}>
                     {options.map((item) => (
                         <Listbox.Option
                             selectStatusAndMoveTask={selectStatusAndMoveTask}

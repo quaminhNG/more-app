@@ -2,14 +2,6 @@ import React, { useState } from 'react';
 import TabLink from '../tab-right/TabLink';
 import TabActive from '../tab-right/TabActive';
 
-const SKILLS = [
-    { name: 'React', level: 92 },
-    { name: 'UI/UX Design', level: 85 },
-    { name: 'TypeScript', level: 78 },
-    { name: 'Node.js', level: 65 },
-    { name: 'Tailwind CSS', level: 95 },
-];
-
 const CheckIcon = () => (
     <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-5">
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -53,7 +45,7 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                 <div className="absolute top-0 right-0 w-48 h-48 bg-white/10 rounded-full -translate-y-1/2 translate-x-1/2 blur-2xl pointer-events-none" />
                 <div className="absolute bottom-0 left-0 w-64 h-64 bg-black/20 rounded-full translate-y-1/2 -translate-x-1/2 blur-3xl pointer-events-none" />
 
-                <div className="relative z-10 flex flex-col h-full p-8">
+                <div className="relative z-10 flex flex-col h-full p-8 justify-between">
                     <div className="flex flex-col items-center text-center mt-6 mb-8">
                         <div className="relative">
                             <div className="w-28 h-28 rounded-full bg-white/20 ring-4 ring-white/30 flex items-center justify-center text-4xl font-black text-white backdrop-blur-sm">
@@ -63,13 +55,7 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                         </div>
                         <h1 className="text-2xl font-black text-white mt-5 leading-tight">John Doe</h1>
                         <p className="text-white/70 text-sm font-medium mt-1">Senior Frontend Engineer</p>
-                        <div className="flex gap-2 mt-4 flex-wrap justify-center">
-                            <span className="px-3 py-1 bg-white/15 backdrop-blur-sm text-white rounded-full text-[11px] font-bold border border-white/20">Engineering</span>
-                            <span className="px-3 py-1 bg-emerald-400/20 backdrop-blur-sm text-emerald-200 rounded-full text-[11px] font-bold border border-emerald-300/30">● Active</span>
-                        </div>
                     </div>
-
-                    <div className="w-full h-px bg-white/10 mb-8" />
 
                     <div className="grid grid-cols-3 gap-4 mb-8 text-center">
                         {[
@@ -101,26 +87,9 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                         ))}
                     </div>
 
-                    {/* Skills */}
-                    <div className="mt-auto">
-                        <p className="text-[11px] font-bold text-white/40 uppercase tracking-widest mb-4">Skills</p>
-                        <div className="space-y-3">
-                            {SKILLS.map(skill => (
-                                <div key={skill.name}>
-                                    <div className="flex justify-between text-xs text-white/70 font-semibold mb-1.5">
-                                        <span>{skill.name}</span>
-                                        <span>{skill.level}%</span>
-                                    </div>
-                                    <div className="h-1.5 bg-white/10 rounded-full overflow-hidden">
-                                        <div
-                                            className="h-full bg-white/60 rounded-full"
-                                            style={{ width: `${skill.level}%` }}
-                                        />
-                                    </div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
+                    <button className="w-full py-2.5 px-6 bg-white/10 hover:bg-white text-white hover:text-red-500 rounded-xl text-sm font-bold shadow-md hover:shadow-lg transition-all backdrop-blur-sm">
+                        Log Out
+                    </button>
                 </div>
             </div>
 
@@ -139,11 +108,8 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                         </div>
                     </div>
 
-                    <button onClick={() => setActiveSection('Edit')} className="hidden sm:flex self-start md:self-auto items-center gap-2 px-4 py-2 text-sm font-bold text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 border border-indigo-100 hover:border-indigo-600 rounded-xl transition-all cursor-pointer shadow-sm md:shadow-lg md:shadow-indigo-500/30 hover:-translate-y-0.5">
-                        <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-4">
-                            <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
-                        </svg>
-                        <span>Edit Profile</span>
+                    <button onClick={() => setActiveSection('Edit')} className="hidden sm:flex self-start md:self-auto items-center px-5 py-2.5 text-sm font-bold text-indigo-600 hover:text-white bg-indigo-50 hover:bg-indigo-600 rounded-xl transition-all cursor-pointer shadow-sm md:shadow-md hover:shadow-lg hover:-translate-y-0.5">
+                        Edit Profile
                     </button>
                 </div>
 
@@ -155,17 +121,15 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                             <p className="text-sm text-white/80 font-medium truncate">Senior Frontend Engineer</p>
                         </div>
                     </div>
-                    <div className="flex items-center justify-between mt-5">
-                        <div className="flex gap-2">
-                            <span className="px-2.5 py-1 bg-white/20 text-white rounded-lg text-[10px] font-bold border border-white/20 backdrop-blur-sm uppercase tracking-wider">Engineering</span>
-                            <span className="px-2.5 py-1 bg-emerald-400/20 text-emerald-100 rounded-lg text-[10px] font-bold border border-emerald-400/30 uppercase tracking-wider">Active</span>
+                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mt-5">
+                        <div className="flex gap-2 items-center w-full sm:w-auto">
+                            <button onClick={() => setActiveSection('Edit')} className="flex-1 sm:flex-none justify-center flex items-center px-4 py-2 text-sm font-bold text-white hover:text-indigo-600 bg-white/20 hover:bg-white rounded-xl transition-all cursor-pointer backdrop-blur-sm shadow-md hover:shadow-lg">
+                                Edit Profile
+                            </button>
+                            <button onClick={() => { }} className="flex-1 sm:flex-none justify-center flex items-center px-4 py-2 text-sm font-bold text-white hover:text-red-500 bg-white/10 hover:bg-white rounded-xl transition-all cursor-pointer backdrop-blur-sm shadow-md hover:shadow-lg">
+                                Log Out
+                            </button>
                         </div>
-                        <button onClick={() => setActiveSection('Edit')} className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-bold text-white hover:text-indigo-600 bg-white/20 hover:bg-white border border-white/30 rounded-lg transition-all cursor-pointer backdrop-blur-sm">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="size-3.5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Z" />
-                            </svg>
-                            Edit
-                        </button>
                     </div>
                 </div>
 
@@ -197,7 +161,7 @@ const ProfileView = ({ handleOpen, isOpen }) => {
 
                             <div className="space-y-0">
                                 {ACTIVITY.map((item, idx) => (
-                                    <div key={idx} className="group flex gap-5 py-5 border-b border-gray-100 last:border-0 hover:bg-white hover:-mx-6 hover:px-6 md:hover:-mx-10 md:hover:px-10 rounded-2xl transition-all duration-200 cursor-default">
+                                    <div key={idx} className="group flex gap-5 py-5 px-4 border-b border-gray-100 last:border-0 hover:bg-white rounded-2xl transition-all duration-200 cursor-default">
                                         <div className="shrink-0 mt-1">
                                             <div className={`w-10 h-10 rounded-2xl ${item.bg} ${item.color} group-hover:shadow-sm flex items-center justify-center transition-all`}>
                                                 {item.icon}
@@ -222,26 +186,6 @@ const ProfileView = ({ handleOpen, isOpen }) => {
                             <p className="text-gray-600 font-medium leading-loose text-base mb-10">
                                 Passionate Frontend Engineer with over <strong className="text-gray-900">5 years</strong> of experience building modern, responsive, and highly interactive web applications. I specialize in React, TypeScript, Tailwind CSS and product-focused UX design. Always eager to learn new technologies and push the user experience further.
                             </p>
-                            <div className="mb-10">
-                                <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-5">Skills & Proficiency</p>
-                                <div className="space-y-5">
-                                    {SKILLS.map(skill => (
-                                        <div key={skill.name} className="group">
-                                            <div className="flex justify-between text-sm font-bold text-gray-700 mb-2">
-                                                <span>{skill.name}</span>
-                                                <span className="text-gray-400">{skill.level}%</span>
-                                            </div>
-                                            <div className="h-2 bg-gray-100 rounded-full overflow-hidden">
-                                                <div
-                                                    className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 rounded-full transition-all duration-1000"
-                                                    style={{ width: `${skill.level}%` }}
-                                                />
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            </div>
-
                             <div>
                                 <p className="text-[11px] font-black text-gray-400 uppercase tracking-widest mb-5">Contact Info</p>
                                 <div className="space-y-4">

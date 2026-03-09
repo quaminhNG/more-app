@@ -170,7 +170,7 @@ const ProjectDetail = ({ project, onBack, onUpdateProject, onDeleteProject }) =>
     const projectTasksList = project.projectTasks || [];
 
     useEffect(() => {
-        const stored = localStorage.getItem("more_app_employees_v3");
+        const stored = localStorage.getItem("more_app_employees");
         if (stored) {
             setAllEmployees(JSON.parse(stored));
         }
@@ -311,7 +311,7 @@ const ProjectDetail = ({ project, onBack, onUpdateProject, onDeleteProject }) =>
         if (!editName.trim()) return;
         onUpdateProject({ ...project, name: editName.trim(), color: editColor, status: editStatus });
         setIsEditOpen(false);
-        showToast("Cập nhật dự án thành công!", "success");
+        showToast("Update project successfully!", "success");
     };
 
     const derivedColumns = DEFAULT_COLUMNS.map(col => ({
@@ -392,7 +392,6 @@ const ProjectDetail = ({ project, onBack, onUpdateProject, onDeleteProject }) =>
                                     <span className="text-[9px] sm:text-xs font-bold uppercase tracking-wider mt-1.5 opacity-70">Total</span>
                                 </div>
                             </div>
-                            {/* Progress bar */}
                             <div className="relative z-10 mt-4 h-1.5 bg-white/20 rounded-full overflow-hidden">
                                 <div className="h-full bg-white/70 rounded-full transition-all duration-1000" style={{ width: `${progress}%` }} />
                             </div>
@@ -400,7 +399,6 @@ const ProjectDetail = ({ project, onBack, onUpdateProject, onDeleteProject }) =>
 
                         <div className="flex flex-col gap-8">
 
-                            {/* ── Task Allocation ── */}
                             <div>
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="font-extrabold text-gray-800 text-base tracking-tight">Task Allocation</h3>
@@ -445,10 +443,8 @@ const ProjectDetail = ({ project, onBack, onUpdateProject, onDeleteProject }) =>
                                 )}
                             </div>
 
-                            {/* Divider */}
                             <div className="h-px bg-gray-100" />
 
-                            {/* ── Members ── */}
                             <div>
                                 <div className="flex items-center justify-between mb-4">
                                     <h3 className="font-extrabold text-gray-800 text-base tracking-tight">Members</h3>
