@@ -1,4 +1,4 @@
-import colorProgress from "../../hooks/ColorProgress";
+import colorProgress from "../../utils/ColorProgress";;
 const ProgressBar = ({ isClick, doneTask, items, progress }) => {
     const color = colorProgress(progress);
     return isClick ? (

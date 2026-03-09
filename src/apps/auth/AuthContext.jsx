@@ -7,7 +7,6 @@ export const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Quick session check on reload
         const storedUser = localStorage.getItem('more_app_user');
         if (storedUser) {
             setUser(JSON.parse(storedUser));
@@ -16,8 +15,30 @@ export const AuthProvider = ({ children }) => {
     }, []);
 
     const login = (userData) => {
+        const registeredUsers = JSON.parse(localStorage.getItem('more_app_users') || '[]');
+        const existingUser = registeredUsers.find(u => u.email === userData.email && u.password === userData.password);
+
+        if (existingUser || (userData.email === 'demo@tasksystem.com')) {
+            const loggedInUser = existingUser || userData;
+            setUser(loggedInUser);
+            localStorage.setItem('more_app_user', JSON.stringify(loggedInUser));
+            return true;
+        }
+        return false;
+    };
+
+    const register = (userData) => {
+        const registeredUsers = JSON.parse(localStorage.getItem('more_app_users') || '[]');
+        const userExists = registeredUsers.some(u => u.email === userData.email);
+        if (userExists) {
+            return false;
+        }
+        registeredUsers.push(userData);
+        localStorage.setItem('more_app_users', JSON.stringify(registeredUsers));
+
         setUser(userData);
         localStorage.setItem('more_app_user', JSON.stringify(userData));
+        return true;
     };
 
     const logout = () => {
@@ -25,10 +46,10 @@ export const AuthProvider = ({ children }) => {
         localStorage.removeItem('more_app_user');
     };
 
-    if (loading) return null; // Or a very minimal spinner
+    if (loading) return null;
 
     return (
-        <AuthContext.Provider value={{ user, login, logout }}>
+        <AuthContext.Provider value={{ user, login, register, logout }}>
             {children}
         </AuthContext.Provider>
     );
