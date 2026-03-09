@@ -1,11 +1,11 @@
 import { Listbox } from "@headlessui/react";
 import { LIST_BOX_COLOR } from "../../constants/task/ListBoxColors"
-const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "up", width = "w-32 sm:w-38", selectStatusAndMoveTask }) => {
+const ListBox = ({ selectedPriority, setSelectedPriority, options, direction = "up", width = "w-32 sm:w-38", selectStatusAndMoveTask, className = "" }) => {
 
     return (
         <Listbox value={selectedPriority} onChange={setSelectedPriority}>
             <div className={`relative ${width} mb-2`}>
-                <Listbox.Button className={`w-full flex items-center justify-between px-4 py-1.5 md:py-2 rounded-xl border border-none shadow-sm text-sm font-medium focus:outline-none transition-colors ${LIST_BOX_COLOR[selectedPriority] || "bg-white text-gray-500"}`}>
+                <Listbox.Button className={`w-full flex items-center justify-between px-4 py-2.5 rounded-xl border border-none shadow-sm text-sm font-medium focus:outline-none transition-colors ${LIST_BOX_COLOR[selectedPriority] || "bg-white text-gray-500"} ${className}`}>
                     <span className="truncate">{selectedPriority}</span>
                     <svg className="w-4 h-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />

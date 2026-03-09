@@ -12,7 +12,7 @@ const TabLink = ({ activeItem, activeTab }) => {
                 </svg>
             </button>
             <button className="cursor-pointer">
-                <span className="text-gray-400 text-sm hover:text-gray-600">
+                <span className="whitespace-nowrap text-gray-400 text-sm hover:text-gray-600">
                     {activeItem}
                 </span>
             </button>
@@ -22,7 +22,7 @@ const TabLink = ({ activeItem, activeTab }) => {
                 </svg>
             </button>
             <button className="cursor-pointer">
-                <span className="text-gray-400 text-sm font-semibold hover:text-gray-800">
+                <span className="whitespace-nowrap text-gray-400 text-sm font-semibold hover:text-gray-800">
                     {activeTab}
                 </span>
             </button>
